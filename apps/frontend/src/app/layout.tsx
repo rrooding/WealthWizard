@@ -1,4 +1,12 @@
+import Link from "next/link"
+import { Inter as FontSans } from "next/font/google"
+import { cn } from "@wealth-wizard/web/ui-components"
 import './global.css';
+
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export const metadata = {
   title: 'Welcome to frontend',
@@ -12,7 +20,29 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
+        <div className="flex flex-col w-full">
+          <header className="flex items-center h-16 px-4 border-b shrink-0 md:px-6">
+            <nav className="flex-col hidden gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+              <Link className="font-bold" href="#">
+                Home
+              </Link>
+              <Link className="text-gray-500 dark:text-gray-400" href="#">
+                Portfolio
+              </Link>
+              <Link className="text-gray-500 dark:text-gray-400" href="#">
+                Transactions
+              </Link>
+              <Link className="text-gray-500 dark:text-gray-400" href="#">
+                Settings
+              </Link>
+            </nav>
+          </header>
+        </div>
+        <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
+          {children}
+        </main>
+      </body>
     </html>
   );
 }
