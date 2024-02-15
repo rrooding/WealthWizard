@@ -15,7 +15,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@wealth-wizard/web/ui-components": ["libs/web/ui-components/src/index.ts"],
+      "@wealth-wizard/web/stocks": ["libs/web/stocks/src/index.ts"],
+      "@wealth-wizard/web/stocks/server": ["libs/web/stocks/src/server.ts"],
+      "@wealth-wizard/web/ui-components": [
+        "libs/web/ui-components/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

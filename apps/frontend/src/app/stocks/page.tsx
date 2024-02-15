@@ -1,5 +1,14 @@
+import { StocksTableCard, PortfolioValueCard } from "@wealth-wizard/web/stocks";
+
 export default function StockPage() {
   return (
-    <div className="bg-indigo-500 p-2 font-mono">Hello Stocks!</div>
+    <div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <PortfolioValueCard />
+      </div>
+      <div>
+        <StocksTableCard />
+        </div>
+    </div>
   );
 }
