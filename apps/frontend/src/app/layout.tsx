@@ -24,17 +24,11 @@ export default function RootLayout({
         <div className="flex flex-col w-full">
           <header className="flex items-center h-16 px-4 border-b shrink-0 md:px-6">
             <nav className="flex-col hidden gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-              <Link className="font-bold" href="#">
+              <Link className="font-bold" href="/">
                 Home
               </Link>
-              <Link className="text-gray-500 dark:text-gray-400" href="#">
-                Portfolio
-              </Link>
-              <Link className="text-gray-500 dark:text-gray-400" href="#">
-                Transactions
-              </Link>
-              <Link className="text-gray-500 dark:text-gray-400" href="#">
-                Settings
+              <Link className="text-gray-500 dark:text-gray-400" href="/stocks">
+                Stocks
               </Link>
             </nav>
           </header>
