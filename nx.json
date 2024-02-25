@@ -15,7 +15,7 @@
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/eslint.config.js"
     ],
-    "sharedGlobals": []
+    "sharedGlobals": ["{workspaceRoot}/go.work"]
   },
   "nxCloudAccessToken": "NDljMDcxYzYtNDM5ZS00YTFlLTgwYzUtNDBiNWM5ZGMwZGRmfHJlYWQtd3JpdGU=",
   "plugins": [
@@ -38,7 +38,8 @@
       "options": {
         "targetName": "lint"
       }
-    }
+    },
+    "@nx-go/nx-go"
   ],
   "generators": {
     "@nx/next": {

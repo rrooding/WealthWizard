@@ -2009,6 +2009,13 @@
   dependencies:
     "@nx/devkit" "18.0.4"
 
+"@nrwl/devkit@18.0.5":
+  version "18.0.5"
+  resolved "https://registry.yarnpkg.com/@nrwl/devkit/-/devkit-18.0.5.tgz#3ef4eba19ae920125ef2360b259a8e3cb950d009"
+  integrity sha512-knBxI8CRmp3g7Bt0O9FJUrew7oqg5JMt8/24EphabXZSdVdxWy7OzHPyoyUVbRedUNHUK7bsUGwpxFaSAkBeyQ==
+  dependencies:
+    "@nx/devkit" "18.0.5"
+
 "@nrwl/eslint-plugin-nx@18.0.4":
   version "18.0.4"
   resolved "https://registry.yarnpkg.com/@nrwl/eslint-plugin-nx/-/eslint-plugin-nx-18.0.4.tgz#b9cef2b6f0075a17e93f11f99301b0c44f3e06d3"
@@ -2073,12 +2080,34 @@
   dependencies:
     "@nx/workspace" "18.0.4"
 
+"@nx-go/nx-go@^3.0.0-beta.0":
+  version "3.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@nx-go/nx-go/-/nx-go-3.0.0-beta.0.tgz#e6ad27063b79db47cc143e384584acb085ea07d5"
+  integrity sha512-P0CshaAXnjCm3vZiCQR5fJEjLM/xyRTjYjxpk3VMumZWVwkjOIZuXyhhcTcFhS9l/t5B37koKVpVrgB/MycPHw==
+  dependencies:
+    "@nx/devkit" "^17.0.0 || ^18.0.0"
+    tslib "^2.3.0"
+
 "@nx/devkit@18.0.4":
   version "18.0.4"
   resolved "https://registry.yarnpkg.com/@nx/devkit/-/devkit-18.0.4.tgz#fec28139ef5d078933c5f1b5a7e0a585672dbdd6"
   integrity sha512-Vs1AXgOjMJyaWpKopD04dy0FwQ22n5ZR1bFf98Ab4Ht0WJwJE90IpUVAkwI03n5BYxAKOlQnFltsB4gu6Y8mZQ==
   dependencies:
     "@nrwl/devkit" "18.0.4"
+    ejs "^3.1.7"
+    enquirer "~2.3.6"
+    ignore "^5.0.4"
+    semver "^7.5.3"
+    tmp "~0.2.1"
+    tslib "^2.3.0"
+    yargs-parser "21.1.1"
+
+"@nx/devkit@18.0.5", "@nx/devkit@^17.0.0 || ^18.0.0":
+  version "18.0.5"
+  resolved "https://registry.yarnpkg.com/@nx/devkit/-/devkit-18.0.5.tgz#0905c08f7eb2bc6b26782e50dc6ef87b0c6de687"
+  integrity sha512-c/3MCUqoXcf/uOIzdfSE1+lefJ4qNObqWdCOpaxUeN7bTCiWxidJVIxKL61UQyPKG7ZNJEU6PaWk5zOsSefGVg==
+  dependencies:
+    "@nrwl/devkit" "18.0.5"
     ejs "^3.1.7"
     enquirer "~2.3.6"
     ignore "^5.0.4"
