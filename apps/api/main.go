@@ -1,12 +1,28 @@
 package main
 
-import "fmt"
+import (
+	"log"
+	"net/http"
+	"os"
+	"wealth-wizard/backend/graph"
 
-func Hello(name string) string {
-	result := "Hello " + name
-	return result
-}
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
+)
+
+const defaultPort = "8080"
 
 func main() {
-	fmt.Println(Hello("api"))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = defaultPort
+	}
+
+	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+
+	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
+	http.Handle("/query", srv)
+
+	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

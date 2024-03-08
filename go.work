@@ -1,3 +1,6 @@
 go 1.22
 
-use ./apps/api
+use (
+	./apps/api
+	./libs/backend/graph
+)
