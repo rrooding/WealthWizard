@@ -1,10 +1,10 @@
 # Where are all the schema files located? globs are supported eg  src/**/*.graphqls
 schema:
-  - ../../shared/graphql/schema.graphql
+  - ../../libs/shared/graphql/*.graphql
 
 # Where should the generated server code go?
 exec:
-  filename: graph.go
+  filename: graph/generated.go
   package: graph
 
 # Uncomment to enable federation
@@ -14,15 +14,15 @@ exec:
 
 # Where should any generated models go?
 model:
-  filename: model/models_gen.go
-  package: model
+  filename: models/generated.go
+  package: models
 
 # Where should the resolver implementations go?
 resolver:
   layout: follow-schema
+  dir: graph
   package: graph
   filename_template: "{name}.resolvers.go"
-  dir: .
   # Optional: turn on to not generate template comments above resolvers
   # omit_template_comment: false
 
@@ -66,7 +66,7 @@ resolver:
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
-#  - "wealth-wizard/api/graph/model"
+  - "wealth-wizard/api/models"
 
 # This section declares type mapping between the GraphQL and go type systems
 #

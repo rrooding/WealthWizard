@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"sync"
 	"sync/atomic"
-	"wealth-wizard/backend/graph/model"
+	"wealth-wizard/api/models"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -47,7 +47,7 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Mutation struct {
-		CreateTransaction func(childComplexity int, input model.NewTransaction) int
+		CreateTransaction func(childComplexity int, input models.NewTransaction) int
 	}
 
 	Query struct {
@@ -63,15 +63,15 @@ type ComplexityRoot struct {
 	Transaction struct {
 		Broker   func(childComplexity int) int
 		BrokerID func(childComplexity int) int
-		Isin     func(childComplexity int) int
+		ISIN     func(childComplexity int) int
 	}
 }
 
 type MutationResolver interface {
-	CreateTransaction(ctx context.Context, input model.NewTransaction) (*model.Transaction, error)
+	CreateTransaction(ctx context.Context, input models.NewTransaction) (*models.Transaction, error)
 }
 type QueryResolver interface {
-	Securities(ctx context.Context) ([]*model.Security, error)
+	Securities(ctx context.Context) ([]*models.Security, error)
 }
 
 type executableSchema struct {
@@ -103,7 +103,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateTransaction(childComplexity, args["input"].(model.NewTransaction)), true
+		return e.complexity.Mutation.CreateTransaction(childComplexity, args["input"].(models.NewTransaction)), true
 
 	case "Query.securities":
 		if e.complexity.Query.Securities == nil {
@@ -148,11 +148,11 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		return e.complexity.Transaction.BrokerID(childComplexity), true
 
 	case "Transaction.isin":
-		if e.complexity.Transaction.Isin == nil {
+		if e.complexity.Transaction.ISIN == nil {
 			break
 		}
 
-		return e.complexity.Transaction.Isin(childComplexity), true
+		return e.complexity.Transaction.ISIN(childComplexity), true
 
 	}
 	return 0, false
@@ -260,7 +260,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "../../shared/graphql/schema.graphql", Input: `type Query {
+	{Name: "../../../libs/shared/graphql/transactions.graphql", Input: `type Query {
   securities: [Security!]!
 }
 
@@ -301,10 +301,10 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 func (ec *executionContext) field_Mutation_createTransaction_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.NewTransaction
+	var arg0 models.NewTransaction
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewTransaction2wealthᚑwizardᚋbackendᚋgraphᚋmodelᚐNewTransaction(ctx, tmp)
+		arg0, err = ec.unmarshalNNewTransaction2wealthᚑwizardᚋapiᚋmodelsᚐNewTransaction(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -380,7 +380,7 @@ func (ec *executionContext) _Mutation_createTransaction(ctx context.Context, fie
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateTransaction(rctx, fc.Args["input"].(model.NewTransaction))
+		return ec.resolvers.Mutation().CreateTransaction(rctx, fc.Args["input"].(models.NewTransaction))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -392,9 +392,9 @@ func (ec *executionContext) _Mutation_createTransaction(ctx context.Context, fie
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Transaction)
+	res := resTmp.(*models.Transaction)
 	fc.Result = res
-	return ec.marshalNTransaction2ᚖwealthᚑwizardᚋbackendᚋgraphᚋmodelᚐTransaction(ctx, field.Selections, res)
+	return ec.marshalNTransaction2ᚖwealthᚑwizardᚋapiᚋmodelsᚐTransaction(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createTransaction(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -455,9 +455,9 @@ func (ec *executionContext) _Query_securities(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Security)
+	res := resTmp.([]*models.Security)
 	fc.Result = res
-	return ec.marshalNSecurity2ᚕᚖwealthᚑwizardᚋbackendᚋgraphᚋmodelᚐSecurityᚄ(ctx, field.Selections, res)
+	return ec.marshalNSecurity2ᚕᚖwealthᚑwizardᚋapiᚋmodelsᚐSecurityᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_securities(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -610,7 +610,7 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _Security_id(ctx context.Context, field graphql.CollectedField, obj *model.Security) (ret graphql.Marshaler) {
+func (ec *executionContext) _Security_id(ctx context.Context, field graphql.CollectedField, obj *models.Security) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Security_id(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -654,7 +654,7 @@ func (ec *executionContext) fieldContext_Security_id(ctx context.Context, field 
 	return fc, nil
 }
 
-func (ec *executionContext) _Security_name(ctx context.Context, field graphql.CollectedField, obj *model.Security) (ret graphql.Marshaler) {
+func (ec *executionContext) _Security_name(ctx context.Context, field graphql.CollectedField, obj *models.Security) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Security_name(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -698,7 +698,7 @@ func (ec *executionContext) fieldContext_Security_name(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _Security_symbol(ctx context.Context, field graphql.CollectedField, obj *model.Security) (ret graphql.Marshaler) {
+func (ec *executionContext) _Security_symbol(ctx context.Context, field graphql.CollectedField, obj *models.Security) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Security_symbol(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -742,7 +742,7 @@ func (ec *executionContext) fieldContext_Security_symbol(ctx context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _Transaction_isin(ctx context.Context, field graphql.CollectedField, obj *model.Transaction) (ret graphql.Marshaler) {
+func (ec *executionContext) _Transaction_isin(ctx context.Context, field graphql.CollectedField, obj *models.Transaction) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Transaction_isin(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -756,7 +756,7 @@ func (ec *executionContext) _Transaction_isin(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Isin, nil
+		return obj.ISIN, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -786,7 +786,7 @@ func (ec *executionContext) fieldContext_Transaction_isin(ctx context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Transaction_broker(ctx context.Context, field graphql.CollectedField, obj *model.Transaction) (ret graphql.Marshaler) {
+func (ec *executionContext) _Transaction_broker(ctx context.Context, field graphql.CollectedField, obj *models.Transaction) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Transaction_broker(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -830,7 +830,7 @@ func (ec *executionContext) fieldContext_Transaction_broker(ctx context.Context,
 	return fc, nil
 }
 
-func (ec *executionContext) _Transaction_brokerId(ctx context.Context, field graphql.CollectedField, obj *model.Transaction) (ret graphql.Marshaler) {
+func (ec *executionContext) _Transaction_brokerId(ctx context.Context, field graphql.CollectedField, obj *models.Transaction) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Transaction_brokerId(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -2647,8 +2647,8 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputNewTransaction(ctx context.Context, obj interface{}) (model.NewTransaction, error) {
-	var it model.NewTransaction
+func (ec *executionContext) unmarshalInputNewTransaction(ctx context.Context, obj interface{}) (models.NewTransaction, error) {
+	var it models.NewTransaction
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -2819,7 +2819,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 
 var securityImplementors = []string{"Security"}
 
-func (ec *executionContext) _Security(ctx context.Context, sel ast.SelectionSet, obj *model.Security) graphql.Marshaler {
+func (ec *executionContext) _Security(ctx context.Context, sel ast.SelectionSet, obj *models.Security) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, securityImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -2868,7 +2868,7 @@ func (ec *executionContext) _Security(ctx context.Context, sel ast.SelectionSet,
 
 var transactionImplementors = []string{"Transaction"}
 
-func (ec *executionContext) _Transaction(ctx context.Context, sel ast.SelectionSet, obj *model.Transaction) graphql.Marshaler {
+func (ec *executionContext) _Transaction(ctx context.Context, sel ast.SelectionSet, obj *models.Transaction) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, transactionImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -3271,12 +3271,12 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 	return res
 }
 
-func (ec *executionContext) unmarshalNNewTransaction2wealthᚑwizardᚋbackendᚋgraphᚋmodelᚐNewTransaction(ctx context.Context, v interface{}) (model.NewTransaction, error) {
+func (ec *executionContext) unmarshalNNewTransaction2wealthᚑwizardᚋapiᚋmodelsᚐNewTransaction(ctx context.Context, v interface{}) (models.NewTransaction, error) {
 	res, err := ec.unmarshalInputNewTransaction(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNSecurity2ᚕᚖwealthᚑwizardᚋbackendᚋgraphᚋmodelᚐSecurityᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Security) graphql.Marshaler {
+func (ec *executionContext) marshalNSecurity2ᚕᚖwealthᚑwizardᚋapiᚋmodelsᚐSecurityᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.Security) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -3300,7 +3300,7 @@ func (ec *executionContext) marshalNSecurity2ᚕᚖwealthᚑwizardᚋbackendᚋg
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNSecurity2ᚖwealthᚑwizardᚋbackendᚋgraphᚋmodelᚐSecurity(ctx, sel, v[i])
+			ret[i] = ec.marshalNSecurity2ᚖwealthᚑwizardᚋapiᚋmodelsᚐSecurity(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -3320,7 +3320,7 @@ func (ec *executionContext) marshalNSecurity2ᚕᚖwealthᚑwizardᚋbackendᚋg
 	return ret
 }
 
-func (ec *executionContext) marshalNSecurity2ᚖwealthᚑwizardᚋbackendᚋgraphᚋmodelᚐSecurity(ctx context.Context, sel ast.SelectionSet, v *model.Security) graphql.Marshaler {
+func (ec *executionContext) marshalNSecurity2ᚖwealthᚑwizardᚋapiᚋmodelsᚐSecurity(ctx context.Context, sel ast.SelectionSet, v *models.Security) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -3345,11 +3345,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNTransaction2wealthᚑwizardᚋbackendᚋgraphᚋmodelᚐTransaction(ctx context.Context, sel ast.SelectionSet, v model.Transaction) graphql.Marshaler {
+func (ec *executionContext) marshalNTransaction2wealthᚑwizardᚋapiᚋmodelsᚐTransaction(ctx context.Context, sel ast.SelectionSet, v models.Transaction) graphql.Marshaler {
 	return ec._Transaction(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNTransaction2ᚖwealthᚑwizardᚋbackendᚋgraphᚋmodelᚐTransaction(ctx context.Context, sel ast.SelectionSet, v *model.Transaction) graphql.Marshaler {
+func (ec *executionContext) marshalNTransaction2ᚖwealthᚑwizardᚋapiᚋmodelsᚐTransaction(ctx context.Context, sel ast.SelectionSet, v *models.Transaction) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")

@@ -4,10 +4,11 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"wealth-wizard/backend/graph"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+
+	"wealth-wizard/api/graph"
 )
 
 const defaultPort = "8080"

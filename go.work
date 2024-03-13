@@ -3,5 +3,5 @@ go 1.22
 use (
 	./apps/api
 	./apps/degiro-importer
-	./libs/backend/graph
+	./libs/backend/database
 )
