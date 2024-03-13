@@ -2,6 +2,17 @@
 
 package model
 
+type Mutation struct {
+}
+
+type NewTransaction struct {
+	Isin   string `json:"isin"`
+	Broker string `json:"broker"`
+	// If the broker does not supply an ID for the transaction, an ID is generated based on
+	// the rest of the data.
+	BrokerID *string `json:"brokerId,omitempty"`
+}
+
 type Query struct {
 }
 
@@ -9,4 +20,10 @@ type Security struct {
 	ID     string `json:"id"`
 	Name   string `json:"name"`
 	Symbol string `json:"symbol"`
+}
+
+type Transaction struct {
+	Isin     string `json:"isin"`
+	Broker   string `json:"broker"`
+	BrokerID string `json:"brokerId"`
 }

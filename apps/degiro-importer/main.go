@@ -5,9 +5,11 @@ import (
   "flag"
   "fmt"
   "os"
-  "io"
-  "encoding/csv"
   "path/filepath"
+  "context"
+  "net/http"
+  "github.com/Khan/genqlient/graphql"
+  "github.com/joho/godotenv"
 )
 
 type cliInput struct {
@@ -51,82 +53,37 @@ func check(e error) {
   }
 }
 
-func processCsvFile(input cliInput, writerChannel chan<- map[string]string) {
-  // Open the file
-  file, err := os.Open(input.filepath)
-  check(err)
-  defer file.Close()
-
-  // Define headers and line slice
-  var headers, line []string
-
-  // Initialize the CSV reader
-  reader := csv.NewReader(file)
-
-  // Reading the first line, where we will find our headers
-  headers, err = reader.Read()
-  check(err)
-
-  // Iterate over each line
-  for {
-    line, err = reader.Read()
-    if err == io.EOF {
-      close(writerChannel)
-      break
-    } else if err != nil {
-      exitGracefully(err)
-    }
-
-    record, err := processCsvLine(headers, line)
-
-    if err != nil {
-      fmt.Printf("Line: %sError: %s\n", line, err)
-      continue
-    }
-
-    writerChannel <- record
-  }
-}
-
-func processCsvLine(headers []string, dataList []string) (map[string]string, error) {
-  if len(dataList) != len(headers) {
-    return nil, errors.New("Line doesn't match headers format")
+func newTransaction(data map[string]string) (*NewTransaction, error) {
+  if data["ISIN"] == "" {
+    return nil, errors.New("ISIN is required")
   }
 
-  recordMap := make(map[string]string)
-  for i, name := range headers {
-    recordMap[name] = dataList[i]
-  }
-
-  return recordMap, nil
-}
-
-/******/
-
-type transaction struct {
-  ISIN string
-  Broker string
-  LocalId string
-}
-
-func transactionForMap(data map[string]string) (*transaction, error) {
-  return &transaction{
-    ISIN: data["ISIN"],
+  newTransaction := &NewTransaction{
+    Isin: data["ISIN"],
     Broker: "DeGiro",
-    LocalId: data["Order ID"],
-  }, nil
-}
+  }
 
-/******/
+  if data["Order ID"] != "" {
+    newTransaction.BrokerId = data["Order ID"]
+  }
+
+  return newTransaction, nil
+}
 
 func handleTransaction(writerChannel <-chan map[string]string, done chan<- bool) {
+  ctx := context.Background()
+  client := graphql.NewClient("http://localhost:3001/query", http.DefaultClient)
+
   for {
     record, ok := <- writerChannel
 
     if ok {
-      t, err := transactionForMap(record)
+      t, err := newTransaction(record)
       check(err)
-      fmt.Printf("Line %v\n", t)
+      fmt.Printf("newLine %v\n", t)
+      resp, err := CreateTransaction(ctx, client, *t)
+      check(err)
+      fmt.Printf("resp %v\n", resp)
 
     } else {
       done <- true
@@ -136,6 +93,12 @@ func handleTransaction(writerChannel <-chan map[string]string, done chan<- bool)
 }
 
 func main() {
+  err := godotenv.Load()
+  if (err != nil) {
+    fmt.Println("Error loading .env file")
+    os.Exit(1)
+  }
+
   flag.Usage = func() {
     fmt.Printf("Usage: %s [options] <csvFile>\nOptions:\n", os.Args[0])
     flag.PrintDefaults()

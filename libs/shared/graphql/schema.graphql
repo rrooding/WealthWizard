@@ -2,6 +2,27 @@ type Query {
   securities: [Security!]!
 }
 
+type Mutation {
+  createTransaction(input: NewTransaction!): Transaction!
+}
+
+input NewTransaction {
+  isin: String!
+  broker: String!
+
+  """
+  If the broker does not supply an ID for the transaction, an ID is generated based on
+  the rest of the data.
+  """
+  brokerId: String
+}
+
+type Transaction {
+  isin: String!
+  broker: String!
+  brokerId: String!
+}
+
 type Security {
   id: ID!
   name: String!

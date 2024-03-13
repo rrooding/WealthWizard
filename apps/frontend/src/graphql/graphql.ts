@@ -15,6 +15,26 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  createTransaction: Transaction;
+};
+
+
+export type MutationCreateTransactionArgs = {
+  input: NewTransaction;
+};
+
+export type NewTransaction = {
+  broker: Scalars['String']['input'];
+  /**
+   * If the broker does not supply an ID for the transaction, an ID is generated based on
+   * the rest of the data.
+   */
+  brokerId?: InputMaybe<Scalars['String']['input']>;
+  isin: Scalars['String']['input'];
+};
+
 export type Query = {
   __typename?: 'Query';
   securities: Array<Security>;
@@ -25,4 +45,11 @@ export type Security = {
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   symbol: Scalars['String']['output'];
+};
+
+export type Transaction = {
+  __typename?: 'Transaction';
+  broker: Scalars['String']['output'];
+  brokerId: Scalars['String']['output'];
+  isin: Scalars['String']['output'];
 };

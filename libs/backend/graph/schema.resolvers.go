@@ -6,16 +6,26 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"wealth-wizard/backend/graph/model"
 	"wealth-wizard/backend/graph/resolvers"
 )
 
+// CreateTransaction is the resolver for the createTransaction field.
+func (r *mutationResolver) CreateTransaction(ctx context.Context, input model.NewTransaction) (*model.Transaction, error) {
+	panic(fmt.Errorf("not implemented: CreateTransaction - createTransaction"))
+}
+
 // Securities is the resolver for the securities field.
 func (r *queryResolver) Securities(ctx context.Context) ([]*model.Security, error) {
-  return resolvers.Securities(ctx)
+	return resolvers.Securities(ctx)
 }
+
+// Mutation returns MutationResolver implementation.
+func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
