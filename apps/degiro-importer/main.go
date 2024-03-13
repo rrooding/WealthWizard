@@ -97,5 +97,5 @@ func main() {
 	go transaction.HandleTransaction(writerChannel, done, callback)
 
 	// Wait for a signal that we are done
-	<-done
+	<- done
 }

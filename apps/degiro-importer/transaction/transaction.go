@@ -27,13 +27,12 @@ func newTransaction(data map[string]string) (*api.NewTransaction, error) {
 
 func HandleTransaction(writerChannel <-chan map[string]string, done chan<- bool, callback func(*api.NewTransaction)) {
 	for {
-		record, ok := <-writerChannel
+		record, ok := <- writerChannel
 
 		if ok {
 			t, err := newTransaction(record)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "error: %v\n", err)
-				os.Exit(1)
 			}
 
 			callback(t)
