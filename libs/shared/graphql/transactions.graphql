@@ -1,8 +1,4 @@
-type Query {
-  securities: [Security!]!
-}
-
-type Mutation {
+extend type Mutation {
   createTransaction(input: NewTransaction!): Transaction!
 }
 
@@ -21,10 +17,4 @@ type Transaction {
   isin: String!
   broker: String!
   brokerId: String!
-}
-
-type Security {
-  id: ID!
-  name: String!
-  symbol: String!
 }

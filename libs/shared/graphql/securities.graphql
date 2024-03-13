@@ -1,0 +1,9 @@
+extend type Query {
+  securities: [Security!]!
+}
+
+type Security {
+  id: ID!
+  name: String!
+  symbol: String!
+}

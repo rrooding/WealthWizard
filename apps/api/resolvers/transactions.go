@@ -1,4 +1,4 @@
-package graph
+package resolvers
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -14,17 +14,3 @@ import (
 func (r *mutationResolver) CreateTransaction(ctx context.Context, input models.NewTransaction) (*models.Transaction, error) {
 	panic(fmt.Errorf("not implemented: CreateTransaction - createTransaction"))
 }
-
-// Securities is the resolver for the securities field.
-func (r *queryResolver) Securities(ctx context.Context) ([]*models.Security, error) {
-	panic(fmt.Errorf("not implemented: Securities - securities"))
-}
-
-// Mutation returns MutationResolver implementation.
-func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
-
-// Query returns QueryResolver implementation.
-func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
-
-type mutationResolver struct{ *Resolver }
-type queryResolver struct{ *Resolver }

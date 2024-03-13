@@ -260,11 +260,22 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "../../../libs/shared/graphql/transactions.graphql", Input: `type Query {
+	{Name: "../../../libs/shared/graphql/schema.graphql", Input: `# Placeholders for the root schema
+
+type Query
+type Mutation
+`, BuiltIn: false},
+	{Name: "../../../libs/shared/graphql/securities.graphql", Input: `extend type Query {
   securities: [Security!]!
 }
 
-type Mutation {
+type Security {
+  id: ID!
+  name: String!
+  symbol: String!
+}
+`, BuiltIn: false},
+	{Name: "../../../libs/shared/graphql/transactions.graphql", Input: `extend type Mutation {
   createTransaction(input: NewTransaction!): Transaction!
 }
 
@@ -283,12 +294,6 @@ type Transaction {
   isin: String!
   broker: String!
   brokerId: String!
-}
-
-type Security {
-  id: ID!
-  name: String!
-  symbol: String!
 }
 `, BuiltIn: false},
 }

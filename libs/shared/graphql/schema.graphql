@@ -1,0 +1,4 @@
+# Placeholders for the root schema
+
+type Query
+type Mutation
