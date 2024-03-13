@@ -1,15 +1,17 @@
 package main
 
 import (
-  "errors"
-  "flag"
-  "fmt"
-  "os"
-  "path/filepath"
-  "context"
-  "net/http"
-  "github.com/Khan/genqlient/graphql"
-  "github.com/joho/godotenv"
+	"errors"
+	"flag"
+	"fmt"
+	"os"
+	"path/filepath"
+
+	"github.com/joho/godotenv"
+
+	"wealth-wizard/degiro-importer/api"
+	"wealth-wizard/degiro-importer/csv"
+	"wealth-wizard/degiro-importer/transaction"
 )
 
 type cliInput struct {
@@ -53,45 +55,6 @@ func check(e error) {
   }
 }
 
-func newTransaction(data map[string]string) (*NewTransaction, error) {
-  if data["ISIN"] == "" {
-    return nil, errors.New("ISIN is required")
-  }
-
-  newTransaction := &NewTransaction{
-    Isin: data["ISIN"],
-    Broker: "DeGiro",
-  }
-
-  if data["Order ID"] != "" {
-    newTransaction.BrokerId = data["Order ID"]
-  }
-
-  return newTransaction, nil
-}
-
-func handleTransaction(writerChannel <-chan map[string]string, done chan<- bool) {
-  ctx := context.Background()
-  client := graphql.NewClient("http://localhost:3001/query", http.DefaultClient)
-
-  for {
-    record, ok := <- writerChannel
-
-    if ok {
-      t, err := newTransaction(record)
-      check(err)
-      fmt.Printf("newLine %v\n", t)
-      resp, err := CreateTransaction(ctx, client, *t)
-      check(err)
-      fmt.Printf("resp %v\n", resp)
-
-    } else {
-      done <- true
-      break
-    }
-  }
-}
-
 func main() {
   err := godotenv.Load()
   if (err != nil) {
@@ -116,8 +79,22 @@ func main() {
   writerChannel := make(chan map[string]string)
   done := make(chan bool)
 
-  go processCsvFile(input, writerChannel)
-  go handleTransaction(writerChannel, done)
+  // In dry run mode, we just print the transactions
+  callback := transaction.Println
+
+  // If not in dry run mode, we create the transactions
+  if !input.dryRun {
+    client := api.Init(os.Getenv("WEALTHWIZARD_API"))
+    ok, err := client.IsOK()
+    if (err != nil || !ok) {
+      exitGracefully(err)
+    }
+
+    callback = transaction.CreatorFunc(client)
+  }
+
+  go csv.ProcessFile(input.filepath, writerChannel)
+  go transaction.HandleTransaction(writerChannel, done, callback)
 
   // Wait for a signal that we are done
   <- done

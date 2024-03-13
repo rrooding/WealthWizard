@@ -2,5 +2,6 @@
 # https://github.com/Khan/genqlient/blob/main/docs/genqlient.yaml
 schema: ../../libs/shared/graphql/schema.graphql
 operations:
-- queries.graphql
-generated: gqlclient.go
+  - "api/*.go"
+generated: api/genqlient.go
+context_type: "-"

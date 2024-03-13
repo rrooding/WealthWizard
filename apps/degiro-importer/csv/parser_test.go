@@ -1,4 +1,4 @@
-package main
+package csv
 
 import (
 	"os"
@@ -7,7 +7,7 @@ import (
   "reflect"
 )
 
-func Test_processCsvFile(t *testing.T) {
+func Test_ProcessFile(t *testing.T) {
 	wantMapSlice := []map[string]string{
 		{"COL1": "1", "COL2": "2", "COL3": "3"},
 		{"COL1": "4", "COL2": "5", "COL3": "6"},
@@ -25,32 +25,30 @@ func Test_processCsvFile(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Creating a CSV temp file for testing
 			tmpfile, err := ioutil.TempFile("", "test*.csv")
-			check(err)
+      if (err != nil) {
+        t.Fatal(err)
+      }
       defer os.Remove(tmpfile.Name())
 
       _, err = tmpfile.WriteString(tt.csvString)
       tmpfile.Sync() // Persist data on disk
 
-      testFileData := cliInput{
-				filepath: tmpfile.Name(),
-        dryRun: false,
-			}
-
+      filepath := tmpfile.Name()
       writerChannel := make(chan map[string]string)
 
-      go processCsvFile(testFileData, writerChannel)
+      go ProcessFile(filepath, writerChannel)
 
       for _, wantMap := range wantMapSlice {
         record := <-writerChannel
         if !reflect.DeepEqual(record, wantMap) {
-          t.Errorf("processCsvFile() = %v, want %v", record, wantMap)
+          t.Errorf("ProcessFile() = %v, want %v", record, wantMap)
         }
       }
     })
   }
 }
 
-func Test_processCsvLine(t *testing.T) {
+func Test_processLine(t *testing.T) {
   tests := []struct {
     name string
     headers []string
@@ -64,14 +62,14 @@ func Test_processCsvLine(t *testing.T) {
 
   for _, tt := range tests {
     t.Run(tt.name, func(t *testing.T) {
-      got, err := processCsvLine(tt.headers, tt.data)
+      got, err := processLine(tt.headers, tt.data)
       if (err != nil) != tt.wantErr {
-        t.Errorf("processCsvLine() error = %v, wantErr %v", err, tt.wantErr)
+        t.Errorf("processLine() error = %v, wantErr %v", err, tt.wantErr)
         return
       }
 
       if !reflect.DeepEqual(got, tt.want) {
-        t.Errorf("processCsvLine() = %v, want %v", got, tt.want)
+        t.Errorf("processLine() = %v, want %v", got, tt.want)
       }
     })
   }

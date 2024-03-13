@@ -1,4 +1,4 @@
-package main
+package csv
 
 import (
   "encoding/csv"
@@ -8,10 +8,12 @@ import (
   "os"
 )
 
-func processCsvFile(input cliInput, writerChannel chan<- map[string]string) {
+func ProcessFile(filepath string, writerChannel chan<- map[string]string) error {
   // Open the file
-  file, err := os.Open(input.filepath)
-  check(err)
+  file, err := os.Open(filepath)
+  if (err != nil) {
+    return errors.New("Error opening CSV file")
+  }
   defer file.Close()
 
   // Define headers and line slice
@@ -22,7 +24,9 @@ func processCsvFile(input cliInput, writerChannel chan<- map[string]string) {
 
   // Reading the first line, where we will find our headers
   headers, err = reader.Read()
-  check(err)
+  if (err != nil) {
+    return errors.New("Error reading header of CSV file")
+  }
 
   // Iterate over each line
   for {
@@ -31,10 +35,10 @@ func processCsvFile(input cliInput, writerChannel chan<- map[string]string) {
       close(writerChannel)
       break
     } else if err != nil {
-      exitGracefully(err)
+      return errors.New("Error reading line")
     }
 
-    record, err := processCsvLine(headers, line)
+    record, err := processLine(headers, line)
 
     if err != nil {
       fmt.Printf("Line: %sError: %s\n", line, err)
@@ -43,9 +47,11 @@ func processCsvFile(input cliInput, writerChannel chan<- map[string]string) {
 
     writerChannel <- record
   }
+
+  return nil
 }
 
-func processCsvLine(headers []string, dataList []string) (map[string]string, error) {
+func processLine(headers []string, dataList []string) (map[string]string, error) {
   if len(dataList) != len(headers) {
     return nil, errors.New("Line doesn't match headers format")
   }

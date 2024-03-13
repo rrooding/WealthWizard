@@ -1,7 +1,0 @@
-mutation CreateTransaction($input: NewTransaction!) {
-  createTransaction(input: $input) {
-    isin
-    broker
-    brokerId
-  }
-}
