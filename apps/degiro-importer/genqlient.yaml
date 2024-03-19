@@ -5,3 +5,8 @@ operations:
   - "api/*.go"
 generated: api/genqlient.go
 context_type: "-"
+bindings:
+  DateTime:
+    type: time.Time
+  Decimal:
+    type: string

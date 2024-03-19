@@ -28,6 +28,13 @@ func ProcessFile(filepath string, writerChannel chan<- map[string]string) error 
 		return errors.New("Error reading header of CSV file")
 	}
 
+	// Fill in missing headers, not all headers have a name
+	for i, header := range headers {
+		if header == "" {
+			headers[i] = fmt.Sprintf("%d", i)
+		}
+	}
+
 	// Iterate over each line
 	for {
 		line, err = reader.Read()

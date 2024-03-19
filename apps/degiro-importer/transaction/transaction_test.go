@@ -4,34 +4,44 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"reflect"
 	"strings"
 	"testing"
+	"time"
+
+	"github.com/google/go-cmp/cmp"
 
 	"wealth-wizard/degiro-importer/api"
 )
 
 func Test_newTransaction(t *testing.T) {
+	cet, _ := time.LoadLocation("CET")
+	date := time.Date(2003, 02, 01, 16, 01, 0, 0, cet)
+
+	price := api.MoneyInput{Amount: "34.54", Currency: "EUR"}
+	transactionCost := api.MoneyInput{Amount: "12.34", Currency: "EUR"}
+
 	tests := []struct {
 		name    string
 		data    map[string]string
 		want    *api.NewTransaction
 		wantErr bool
 	}{
-		{"Valid data", map[string]string{"ISIN": "123", "Order ID": "456"}, &api.NewTransaction{Isin: "123", Broker: "DeGiro", BrokerId: "456"}, false},
-		{"Valid data without order id", map[string]string{"ISIN": "123"}, &api.NewTransaction{Isin: "123", Broker: "DeGiro"}, false},
-		{"Missing ISIN", map[string]string{"Order ID": "123"}, nil, true},
+		{"Valid data", map[string]string{"ISIN": "123", "Order ID": "456", "Aantal": "1", "Datum": "01-02-2003", "Tijd": "16:01", "Koers": "34.54", "8": "EUR"}, &api.NewTransaction{ISIN: "123", Broker: "DeGiro", BrokerID: "456", Amount: 1, Date: date, Price: price}, false},
+		{"Valid data with transaction cost", map[string]string{"ISIN": "123", "Order ID": "456", "Aantal": "1", "Datum": "01-02-2003", "Tijd": "16:01", "Koers": "34.54", "8": "EUR", "Transactiekosten en/of": "12.34", "15": "EUR"}, &api.NewTransaction{ISIN: "123", Broker: "DeGiro", BrokerID: "456", Amount: 1, Date: date, Price: price, TransactionCost: transactionCost}, false},
+		{"Valid data without order id", map[string]string{"ISIN": "123", "Aantal": "1", "Datum": "01-02-2003", "Tijd": "16:01"}, &api.NewTransaction{ISIN: "123", Broker: "DeGiro", Amount: 1, Date: date}, false},
+		{"Missing ISIN", map[string]string{"Order ID": "456", "Aantal": "1", "Datum": "01-02-2003", "Tijd": "16:01"}, nil, true},
+		{"Invalid amount", map[string]string{"ISIN": "123", "Order ID": "456", "Aantal": "test", "Datum": "01-02-2003", "Tijd": "16:01"}, nil, true},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			get, err := newTransaction(tt.data)
+			got, err := newTransaction(tt.data)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("newTransaction() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
-			if !reflect.DeepEqual(get, tt.want) {
-				t.Errorf("newTransaction() = %v, want %v", get, tt.want)
+			if diff := cmp.Diff(tt.want, got); diff != "" {
+				t.Errorf("newTransaction() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
@@ -55,14 +65,14 @@ func Test_HandleTransaction(t *testing.T) {
 			writerChannel: func() <-chan map[string]string {
 				ch := make(chan map[string]string)
 				go func() {
-					ch <- map[string]string{"ISIN": "123", "Order ID": "456"}
+					ch <- map[string]string{"ISIN": "123", "Order ID": "456", "Aantal": "1", "Koers": "1.23", "8": "EUR", "Datum": "01-02-2003", "Tijd": "16:01"}
 					close(ch)
 				}()
 				return ch
 			}(),
 			done:            make(chan bool),
 			callback:        mockCallback,
-			expectedOutputs: []string{"Mock callback called with transaction: &{123 DeGiro 456}"},
+			expectedOutputs: []string{"Mock callback called with transaction: &{123 DeGiro 2003-02-01 16:01:00 +0100 CET  1 {1.23 EUR} { } 456}"},
 			wantErr:         false,
 		},
 		{
@@ -85,8 +95,8 @@ func Test_HandleTransaction(t *testing.T) {
 			writerChannel: func() <-chan map[string]string {
 				ch := make(chan map[string]string)
 				go func() {
-					ch <- map[string]string{"ISIN": "123", "Order ID": "456"}
-					ch <- map[string]string{"ISIN": "789", "Order ID": "101"}
+					ch <- map[string]string{"ISIN": "123", "Order ID": "456", "Aantal": "1", "Koers": "1.23", "8": "EUR", "Datum": "01-02-2003", "Tijd": "16:01"}
+					ch <- map[string]string{"ISIN": "789", "Order ID": "101", "Aantal": "1", "Koers": "1.23", "8": "EUR", "Datum": "01-02-2003", "Tijd": "16:01"}
 					close(ch)
 				}()
 				return ch
@@ -96,10 +106,10 @@ func Test_HandleTransaction(t *testing.T) {
 				fmt.Println("Mock callback called with transaction:", transaction)
 			},
 			expectedOutputs: []string{
-				"Mock callback called with transaction: &{123 DeGiro 456}",
-				"Mock callback called with transaction: &{789 DeGiro 101}",
+				"Mock callback called with transaction: &{123 DeGiro 2003-02-01 16:01:00 +0100 CET  1 {1.23 EUR} { } 456}",
+				"Mock callback called with transaction: &{789 DeGiro 2003-02-01 16:01:00 +0100 CET  1 {1.23 EUR} { } 101}",
 			},
-      wantErr: false,
+			wantErr: false,
 		},
 	}
 

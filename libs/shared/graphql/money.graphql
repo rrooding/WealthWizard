@@ -1,0 +1,9 @@
+type Money {
+  amount: Decimal!
+  currency: String!
+}
+
+input MoneyInput {
+  amount: Decimal!
+  currency: String!
+}

@@ -3,22 +3,19 @@ package csv
 import (
 	"io/ioutil"
 	"os"
-	"reflect"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func Test_ProcessFile(t *testing.T) {
-	wantMapSlice := []map[string]string{
-		{"COL1": "1", "COL2": "2", "COL3": "3"},
-		{"COL1": "4", "COL2": "5", "COL3": "6"},
-	}
-
 	tests := []struct {
-		name      string
-		csvString string
-		separator string
+		name         string
+		csvString    string
+		wantMapSlice []map[string]string
 	}{
-		{"Comma separator", "COL1,COL2,COL3\n1,2,3\n4,5,6\n", "comma"},
+		{"Valid data", "COL1,COL2,COL3\n1,2,3\n4,5,6\n", []map[string]string{{"COL1": "1", "COL2": "2", "COL3": "3"}, {"COL1": "4", "COL2": "5", "COL3": "6"}}},
+		{"Missing header", "COL1,,COL3\n1,2,3\n4,5,6\n", []map[string]string{{"COL1": "1", "1": "2", "COL3": "3"}, {"COL1": "4", "1": "5", "COL3": "6"}}},
 	}
 
 	for _, tt := range tests {
@@ -38,10 +35,10 @@ func Test_ProcessFile(t *testing.T) {
 
 			go ProcessFile(filepath, writerChannel)
 
-			for _, wantMap := range wantMapSlice {
+			for _, wantMap := range tt.wantMapSlice {
 				record := <-writerChannel
-				if !reflect.DeepEqual(record, wantMap) {
-					t.Errorf("ProcessFile() = %v, want %v", record, wantMap)
+				if diff := cmp.Diff(wantMap, record); diff != "" {
+					t.Errorf("ProcessFile() mismatch (-want +got):\n%s", diff)
 				}
 			}
 		})
@@ -68,8 +65,8 @@ func Test_processLine(t *testing.T) {
 				return
 			}
 
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("processLine() = %v, want %v", got, tt.want)
+			if diff := cmp.Diff(tt.want, got); diff != "" {
+				t.Errorf("processLine() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}

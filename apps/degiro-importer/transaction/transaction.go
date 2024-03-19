@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
+	"time"
 
 	"wealth-wizard/degiro-importer/api"
 )
@@ -13,13 +15,45 @@ func newTransaction(data map[string]string) (*api.NewTransaction, error) {
 		return nil, errors.New("ISIN is required")
 	}
 
-	newTransaction := &api.NewTransaction{
-		Isin:   data["ISIN"],
-		Broker: "DeGiro",
+	// Parse the amount as an integer
+	amount, err := strconv.Atoi(data["Aantal"])
+	if err != nil {
+		return nil, errors.New("Invalid amount")
 	}
 
+	// Parse the date and time
+	dateTime := fmt.Sprintf("%s %s CET", data["Datum"], data["Tijd"])
+	date, err := time.Parse("02-01-2006 15:04 MST", dateTime)
+	if err != nil {
+		return nil, err
+	}
+
+	// Parse the price as a decimal
+	price := api.MoneyInput{
+		Amount:   data["Koers"],
+		Currency: data["8"],
+	}
+
+	newTransaction := &api.NewTransaction{
+		ISIN:     data["ISIN"],
+		Broker:   "DeGiro",
+		Date:     date,
+		Exchange: data["Beurs"],
+		Amount:   amount,
+		Price:    price,
+	}
+
+	// Fill in the broker ID if it exists
 	if data["Order ID"] != "" {
-		newTransaction.BrokerId = data["Order ID"]
+		newTransaction.BrokerID = data["Order ID"]
+	}
+
+	if data["Transactiekosten en/of"] != "" {
+		// Parse the transaction cost as a decimal
+		newTransaction.TransactionCost = api.MoneyInput{
+			Amount:   data["Transactiekosten en/of"],
+			Currency: data["15"],
+		}
 	}
 
 	return newTransaction, nil
@@ -27,7 +61,7 @@ func newTransaction(data map[string]string) (*api.NewTransaction, error) {
 
 func HandleTransaction(writerChannel <-chan map[string]string, done chan<- bool, callback func(*api.NewTransaction)) {
 	for {
-		record, ok := <- writerChannel
+		record, ok := <-writerChannel
 
 		if ok {
 			t, err := newTransaction(record)
@@ -57,6 +91,6 @@ func CreatorFunc(client *api.API) func(*api.NewTransaction) {
 			return
 		}
 
-		fmt.Printf("Transaction created: %v\n", res.GetCreateTransaction().BrokerId)
+		fmt.Printf("Transaction created: %v\n", res.GetCreateTransaction().ID)
 	}
 }
