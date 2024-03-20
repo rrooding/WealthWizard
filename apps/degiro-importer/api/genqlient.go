@@ -10,11 +10,11 @@ import (
 
 // CreateTransactionCreateTransaction includes the requested fields of the GraphQL type Transaction.
 type CreateTransactionCreateTransaction struct {
-	Id string `json:"id"`
+	Id uint64 `json:"id"`
 }
 
 // GetId returns CreateTransactionCreateTransaction.Id, and is useful for accessing the field via an interface.
-func (v *CreateTransactionCreateTransaction) GetId() string { return v.Id }
+func (v *CreateTransactionCreateTransaction) GetId() uint64 { return v.Id }
 
 // CreateTransactionResponse is returned by CreateTransaction on success.
 type CreateTransactionResponse struct {

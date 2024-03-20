@@ -6,6 +6,8 @@ operations:
 generated: api/genqlient.go
 context_type: "-"
 bindings:
+  ID:
+    type: uint64
   DateTime:
     type: time.Time
   Decimal:

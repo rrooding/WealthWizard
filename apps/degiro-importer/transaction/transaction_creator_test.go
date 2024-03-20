@@ -18,7 +18,7 @@ func (m *MockClient) CreateTransaction(input api.NewTransaction) (*api.CreateTra
 	fmt.Println("Mock client called with transaction:", input)
 
 	return &api.CreateTransactionResponse{
-		CreateTransaction: api.CreateTransactionCreateTransaction{Id: input.Isin},
+		CreateTransaction: api.CreateTransactionCreateTransaction{Id: 1},
 	}, nil
 }
 
