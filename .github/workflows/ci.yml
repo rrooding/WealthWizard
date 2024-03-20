@@ -33,6 +33,9 @@ jobs:
           cache: 'yarn'
       - run: yarn install --frozen-lockfile
       - uses: nrwl/nx-set-shas@v4
+        with:
+           main-branch-name: "master"
+
 
       # - run: yarn nx-cloud record -- nx format:check
       - run: yarn nx affected -t lint test
