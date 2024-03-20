@@ -7,6 +7,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/joho/godotenv"
 
 	"wealth-wizard/api/database"
 	"wealth-wizard/api/graph"
@@ -15,10 +16,36 @@ import (
 
 const defaultPort = "8080"
 
+func databaseDSN() (string, error) {
+	pgHost := os.Getenv("PGHOST")
+	pgUser := os.Getenv("PGUSER")
+	pgPassword := os.Getenv("PGPASSWORD")
+	pgDatabase := os.Getenv("PGDATABASE")
+
+	config := &database.Config{
+		Host:     pgHost,
+		User:     pgUser,
+		Password: pgPassword,
+		Database: pgDatabase,
+	}
+
+	return config.GetDSN()
+}
+
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
+	}
+
+	dsn, err := databaseDSN()
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	db := database.InitDB(dsn)

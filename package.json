@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "pre-commit": "python tools/pre-commit/pre-commit-3.6.2.pyz",
     "codegen": "nx run-many --target=codegen --all"
   },
   "private": true,
@@ -64,4 +65,3 @@
     "typescript": "^5.3.3"
   }
 }
-
