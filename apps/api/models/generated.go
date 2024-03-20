@@ -6,30 +6,20 @@ import (
 	"time"
 )
 
-type Money struct {
-	Amount   string `json:"amount"`
-	Currency string `json:"currency"`
-}
-
-type MoneyInput struct {
-	Amount   string `json:"amount"`
-	Currency string `json:"currency"`
-}
-
 type Mutation struct {
 }
 
 type NewTransaction struct {
-	Isin            string      `json:"ISIN"`
-	Broker          string      `json:"Broker"`
-	Date            time.Time   `json:"Date"`
-	Exchange        string      `json:"Exchange"`
-	Amount          int         `json:"Amount"`
-	Price           *MoneyInput `json:"Price"`
-	TransactionCost *MoneyInput `json:"TransactionCost,omitempty"`
+	Isin            string      `json:"isin"`
+	Broker          string      `json:"broker"`
+	Date            time.Time   `json:"date"`
+	Exchange        string      `json:"exchange"`
+	Amount          int         `json:"amount"`
+	Price           *MoneyInput `json:"price"`
+	TransactionCost *MoneyInput `json:"transactionCost,omitempty"`
 	// If the broker does not supply an ID for the transaction, an ID is generated based on
 	// the rest of the data.
-	BrokerID *string `json:"BrokerID,omitempty"`
+	BrokerID *string `json:"brokerId,omitempty"`
 }
 
 type Query struct {

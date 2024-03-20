@@ -44,18 +44,18 @@ export type MutationCreateTransactionArgs = {
 };
 
 export type NewTransaction = {
-  Amount: Scalars['Int']['input'];
-  Broker: Scalars['String']['input'];
+  amount: Scalars['Int']['input'];
+  broker: Scalars['String']['input'];
   /**
    * If the broker does not supply an ID for the transaction, an ID is generated based on
    * the rest of the data.
    */
-  BrokerID?: InputMaybe<Scalars['String']['input']>;
-  Date: Scalars['DateTime']['input'];
-  Exchange: Scalars['String']['input'];
-  ISIN: Scalars['String']['input'];
-  Price: MoneyInput;
-  TransactionCost?: InputMaybe<MoneyInput>;
+  brokerId?: InputMaybe<Scalars['String']['input']>;
+  date: Scalars['DateTime']['input'];
+  exchange: Scalars['String']['input'];
+  isin: Scalars['String']['input'];
+  price: MoneyInput;
+  transactionCost?: InputMaybe<MoneyInput>;
 };
 
 export type Query = {
@@ -72,13 +72,13 @@ export type Security = {
 
 export type Transaction = {
   __typename?: 'Transaction';
-  Amount: Scalars['Int']['output'];
-  Broker: Scalars['String']['output'];
-  BrokerID: Scalars['String']['output'];
-  Date: Scalars['DateTime']['output'];
-  Exchange: Scalars['String']['output'];
-  ID: Scalars['ID']['output'];
-  ISIN: Scalars['String']['output'];
-  Price: Money;
-  TransactionCost?: Maybe<Money>;
+  amount: Scalars['Int']['output'];
+  broker: Scalars['String']['output'];
+  brokerId: Scalars['String']['output'];
+  date: Scalars['DateTime']['output'];
+  exchange: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  isin: Scalars['String']['output'];
+  price: Money;
+  transactionCost?: Maybe<Money>;
 };
