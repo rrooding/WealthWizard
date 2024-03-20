@@ -17,7 +17,7 @@
     ],
     "sharedGlobals": ["{workspaceRoot}/go.work"]
   },
-  "nxCloudAccessToken": "NDljMDcxYzYtNDM5ZS00YTFlLTgwYzUtNDBiNWM5ZGMwZGRmfHJlYWQtd3JpdGU=",
+  "nxCloudAccessToken": "ZGQ0OTdmOTgtOGY3ZC00OGJmLWIzN2QtNzlmZDc4YjIwNzcwfHJlYWQtd3JpdGU=",
   "plugins": [
     {
       "plugin": "@nx/next/plugin",
