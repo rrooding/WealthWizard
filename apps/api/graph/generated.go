@@ -65,9 +65,11 @@ type ComplexityRoot struct {
 	}
 
 	Security struct {
-		ID     func(childComplexity int) int
-		Name   func(childComplexity int) int
-		Symbol func(childComplexity int) int
+		Amount       func(childComplexity int) int
+		AveragePrice func(childComplexity int) int
+		Broker       func(childComplexity int) int
+		Exchange     func(childComplexity int) int
+		Isin         func(childComplexity int) int
 	}
 
 	Transaction struct {
@@ -153,26 +155,40 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Securities(childComplexity), true
 
-	case "Security.id":
-		if e.complexity.Security.ID == nil {
+	case "Security.amount":
+		if e.complexity.Security.Amount == nil {
 			break
 		}
 
-		return e.complexity.Security.ID(childComplexity), true
+		return e.complexity.Security.Amount(childComplexity), true
 
-	case "Security.name":
-		if e.complexity.Security.Name == nil {
+	case "Security.averagePrice":
+		if e.complexity.Security.AveragePrice == nil {
 			break
 		}
 
-		return e.complexity.Security.Name(childComplexity), true
+		return e.complexity.Security.AveragePrice(childComplexity), true
 
-	case "Security.symbol":
-		if e.complexity.Security.Symbol == nil {
+	case "Security.broker":
+		if e.complexity.Security.Broker == nil {
 			break
 		}
 
-		return e.complexity.Security.Symbol(childComplexity), true
+		return e.complexity.Security.Broker(childComplexity), true
+
+	case "Security.exchange":
+		if e.complexity.Security.Exchange == nil {
+			break
+		}
+
+		return e.complexity.Security.Exchange(childComplexity), true
+
+	case "Security.isin":
+		if e.complexity.Security.Isin == nil {
+			break
+		}
+
+		return e.complexity.Security.Isin(childComplexity), true
 
 	case "Transaction.amount":
 		if e.complexity.Transaction.Amount == nil {
@@ -373,9 +389,11 @@ type Mutation
 }
 
 type Security {
-  id: ID!
-  name: String!
-  symbol: String!
+  isin: String!
+  broker: String!
+  exchange: String!
+  amount: Int!
+  averagePrice: Money!
 }
 `, BuiltIn: false},
 	{Name: "../../../libs/shared/graphql/transactions.graphql", Input: `extend type Mutation {
@@ -689,12 +707,16 @@ func (ec *executionContext) fieldContext_Query_securities(ctx context.Context, f
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Security_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Security_name(ctx, field)
-			case "symbol":
-				return ec.fieldContext_Security_symbol(ctx, field)
+			case "isin":
+				return ec.fieldContext_Security_isin(ctx, field)
+			case "broker":
+				return ec.fieldContext_Security_broker(ctx, field)
+			case "exchange":
+				return ec.fieldContext_Security_exchange(ctx, field)
+			case "amount":
+				return ec.fieldContext_Security_amount(ctx, field)
+			case "averagePrice":
+				return ec.fieldContext_Security_averagePrice(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Security", field.Name)
 		},
@@ -831,8 +853,8 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _Security_id(ctx context.Context, field graphql.CollectedField, obj *models.Security) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Security_id(ctx, field)
+func (ec *executionContext) _Security_isin(ctx context.Context, field graphql.CollectedField, obj *models.Security) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Security_isin(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -845,51 +867,7 @@ func (ec *executionContext) _Security_id(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Security_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Security",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Security_name(ctx context.Context, field graphql.CollectedField, obj *models.Security) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Security_name(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
+		return obj.Isin, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -906,7 +884,7 @@ func (ec *executionContext) _Security_name(ctx context.Context, field graphql.Co
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Security_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Security_isin(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Security",
 		Field:      field,
@@ -919,8 +897,8 @@ func (ec *executionContext) fieldContext_Security_name(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _Security_symbol(ctx context.Context, field graphql.CollectedField, obj *models.Security) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Security_symbol(ctx, field)
+func (ec *executionContext) _Security_broker(ctx context.Context, field graphql.CollectedField, obj *models.Security) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Security_broker(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -933,7 +911,7 @@ func (ec *executionContext) _Security_symbol(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Symbol, nil
+		return obj.Broker, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -950,7 +928,7 @@ func (ec *executionContext) _Security_symbol(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Security_symbol(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Security_broker(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Security",
 		Field:      field,
@@ -958,6 +936,144 @@ func (ec *executionContext) fieldContext_Security_symbol(ctx context.Context, fi
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Security_exchange(ctx context.Context, field graphql.CollectedField, obj *models.Security) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Security_exchange(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Exchange, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Security_exchange(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Security",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Security_amount(ctx context.Context, field graphql.CollectedField, obj *models.Security) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Security_amount(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Amount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Security_amount(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Security",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Security_averagePrice(ctx context.Context, field graphql.CollectedField, obj *models.Security) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Security_averagePrice(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AveragePrice, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.Money)
+	fc.Result = res
+	return ec.marshalNMoney2ᚖwealthᚑwizardᚋapiᚋmodelsᚐMoney(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Security_averagePrice(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Security",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "amount":
+				return ec.fieldContext_Money_amount(ctx, field)
+			case "currency":
+				return ec.fieldContext_Money_currency(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Money", field.Name)
 		},
 	}
 	return fc, nil
@@ -3468,18 +3584,28 @@ func (ec *executionContext) _Security(ctx context.Context, sel ast.SelectionSet,
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Security")
-		case "id":
-			out.Values[i] = ec._Security_id(ctx, field, obj)
+		case "isin":
+			out.Values[i] = ec._Security_isin(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "name":
-			out.Values[i] = ec._Security_name(ctx, field, obj)
+		case "broker":
+			out.Values[i] = ec._Security_broker(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "symbol":
-			out.Values[i] = ec._Security_symbol(ctx, field, obj)
+		case "exchange":
+			out.Values[i] = ec._Security_exchange(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "amount":
+			out.Values[i] = ec._Security_amount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "averagePrice":
+			out.Values[i] = ec._Security_averagePrice(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -4007,21 +4133,6 @@ func (ec *executionContext) unmarshalNDecimal2string(ctx context.Context, v inte
 
 func (ec *executionContext) marshalNDecimal2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	res := graphql.MarshalString(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {
-	res, err := graphql.UnmarshalID(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	res := graphql.MarshalID(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")

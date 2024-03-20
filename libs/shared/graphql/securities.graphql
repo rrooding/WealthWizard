@@ -3,7 +3,9 @@ extend type Query {
 }
 
 type Security {
-  id: ID!
-  name: String!
-  symbol: String!
+  isin: String!
+  broker: String!
+  exchange: String!
+  amount: Int!
+  averagePrice: Money!
 }

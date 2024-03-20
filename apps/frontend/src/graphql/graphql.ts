@@ -65,9 +65,11 @@ export type Query = {
 
 export type Security = {
   __typename?: 'Security';
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
-  symbol: Scalars['String']['output'];
+  amount: Scalars['Int']['output'];
+  averagePrice: Money;
+  broker: Scalars['String']['output'];
+  exchange: Scalars['String']['output'];
+  isin: Scalars['String']['output'];
 };
 
 export type Transaction = {

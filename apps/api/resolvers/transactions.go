@@ -6,12 +6,13 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 	"fmt"
-
 	"wealth-wizard/api/graph"
 	"wealth-wizard/api/models"
 
 	"github.com/shopspring/decimal"
+	"gorm.io/gorm"
 )
 
 // CreateTransaction is the resolver for the createTransaction field.
@@ -73,7 +74,6 @@ func (r *transactionResolver) TransactionCost(ctx context.Context, obj *models.T
 	panic(fmt.Errorf("not implemented: TransactionCost - TransactionCost"))
 }
 
-// Transaction returns graph.TransactionResolver implementation.
 func (r *Resolver) Transaction() graph.TransactionResolver { return &transactionResolver{r} }
 
 type transactionResolver struct{ *Resolver }

@@ -32,10 +32,8 @@ func (r *moneyInputResolver) Amount(ctx context.Context, obj *models.MoneyInput,
 	return nil
 }
 
-// Money returns graph.MoneyResolver implementation.
 func (r *Resolver) Money() graph.MoneyResolver { return &moneyResolver{r} }
 
-// MoneyInput returns graph.MoneyInputResolver implementation.
 func (r *Resolver) MoneyInput() graph.MoneyInputResolver { return &moneyInputResolver{r} }
 
 type moneyResolver struct{ *Resolver }

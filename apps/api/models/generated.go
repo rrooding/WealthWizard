@@ -26,7 +26,9 @@ type Query struct {
 }
 
 type Security struct {
-	ID     string `json:"id"`
-	Name   string `json:"name"`
-	Symbol string `json:"symbol"`
+	Isin         string `json:"isin"`
+	Broker       string `json:"broker"`
+	Exchange     string `json:"exchange"`
+	Amount       int    `json:"amount"`
+	AveragePrice *Money `json:"averagePrice"`
 }
