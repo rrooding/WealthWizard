@@ -6,6 +6,9 @@
     "codegen": "nx run-many --target=codegen --all"
   },
   "private": true,
+  "engines": {
+    "node": ">=20.0.0 <21.0.0",
+  },
   "dependencies": {
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
