@@ -3,31 +3,31 @@ extend type Mutation {
 }
 
 input NewTransaction {
-  ISIN: String!
-  Broker: String!
-  Date: DateTime!
-  Exchange: String!
-  Amount: Int!
-  Price: MoneyInput!
+  isin: String!
+  broker: String!
+  date: DateTime!
+  exchange: String!
+  amount: Int!
+  price: MoneyInput!
 
-  TransactionCost: MoneyInput
+  transactionCost: MoneyInput
 
   """
   If the broker does not supply an ID for the transaction, an ID is generated based on
   the rest of the data.
   """
-  BrokerID: String
+  brokerId: String
 }
 
 type Transaction {
-  ID: ID!
-  ISIN: String!
-  Broker: String!
-  BrokerID: String!
-  Date: DateTime!
-  Exchange: String!
-  Amount: Int!
-  Price: Money!
+  id: ID!
+  isin: String!
+  broker: String!
+  brokerId: String!
+  date: DateTime!
+  exchange: String!
+  amount: Int!
+  price: Money!
 
-  TransactionCost: Money
+  transactionCost: Money
 }

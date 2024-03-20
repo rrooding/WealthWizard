@@ -20,6 +20,6 @@ func CreatorFunc(client TransactionCreator) func(*api.NewTransaction) {
 			return
 		}
 
-		fmt.Printf("Transaction created: %v\n", res.GetCreateTransaction().ID)
+		fmt.Printf("Transaction created: %v\n", res.GetCreateTransaction().Id)
 	}
 }

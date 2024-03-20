@@ -25,9 +25,9 @@ func Test_newTransaction(t *testing.T) {
 		want    *api.NewTransaction
 		wantErr bool
 	}{
-		{"Valid data", map[string]string{"ISIN": "123", "Order ID": "456", "Aantal": "1", "Datum": "01-02-2003", "Tijd": "16:01", "Koers": "34.54", "8": "EUR"}, &api.NewTransaction{ISIN: "123", Broker: "DeGiro", BrokerID: "456", Amount: 1, Date: date, Price: price}, false},
-		{"Valid data with transaction cost", map[string]string{"ISIN": "123", "Order ID": "456", "Aantal": "1", "Datum": "01-02-2003", "Tijd": "16:01", "Koers": "34.54", "8": "EUR", "Transactiekosten en/of": "12.34", "15": "EUR"}, &api.NewTransaction{ISIN: "123", Broker: "DeGiro", BrokerID: "456", Amount: 1, Date: date, Price: price, TransactionCost: transactionCost}, false},
-		{"Valid data without order id", map[string]string{"ISIN": "123", "Aantal": "1", "Datum": "01-02-2003", "Tijd": "16:01"}, &api.NewTransaction{ISIN: "123", Broker: "DeGiro", Amount: 1, Date: date}, false},
+		{"Valid data", map[string]string{"ISIN": "123", "Order ID": "456", "Aantal": "1", "Datum": "01-02-2003", "Tijd": "16:01", "Koers": "34.54", "8": "EUR"}, &api.NewTransaction{Isin: "123", Broker: "DeGiro", BrokerId: "456", Amount: 1, Date: date, Price: price}, false},
+		{"Valid data with transaction cost", map[string]string{"ISIN": "123", "Order ID": "456", "Aantal": "1", "Datum": "01-02-2003", "Tijd": "16:01", "Koers": "34.54", "8": "EUR", "Transactiekosten en/of": "12.34", "15": "EUR"}, &api.NewTransaction{Isin: "123", Broker: "DeGiro", BrokerId: "456", Amount: 1, Date: date, Price: price, TransactionCost: transactionCost}, false},
+		{"Valid data without order id", map[string]string{"ISIN": "123", "Aantal": "1", "Datum": "01-02-2003", "Tijd": "16:01"}, &api.NewTransaction{Isin: "123", Broker: "DeGiro", Amount: 1, Date: date}, false},
 		{"Missing ISIN", map[string]string{"Order ID": "456", "Aantal": "1", "Datum": "01-02-2003", "Tijd": "16:01"}, nil, true},
 		{"Invalid amount", map[string]string{"ISIN": "123", "Order ID": "456", "Aantal": "test", "Datum": "01-02-2003", "Tijd": "16:01"}, nil, true},
 	}
@@ -152,7 +152,7 @@ func Test_HandleTransaction(t *testing.T) {
 }
 
 func Test_Println(t *testing.T) {
-  mockTransaction := &api.NewTransaction{ISIN: "123", Broker: "DeGiro", Date: time.Date(2003, 02, 01, 16, 01, 0, 0, time.Local)}
+  mockTransaction := &api.NewTransaction{Isin: "123", Broker: "DeGiro", Date: time.Date(2003, 02, 01, 16, 01, 0, 0, time.Local)}
 
   // Redirect stdout
   realStdout := os.Stdout

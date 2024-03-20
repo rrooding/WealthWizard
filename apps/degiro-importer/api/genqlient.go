@@ -10,11 +10,11 @@ import (
 
 // CreateTransactionCreateTransaction includes the requested fields of the GraphQL type Transaction.
 type CreateTransactionCreateTransaction struct {
-	ID string `json:"ID"`
+	Id string `json:"id"`
 }
 
-// GetID returns CreateTransactionCreateTransaction.ID, and is useful for accessing the field via an interface.
-func (v *CreateTransactionCreateTransaction) GetID() string { return v.ID }
+// GetId returns CreateTransactionCreateTransaction.Id, and is useful for accessing the field via an interface.
+func (v *CreateTransactionCreateTransaction) GetId() string { return v.Id }
 
 // CreateTransactionResponse is returned by CreateTransaction on success.
 type CreateTransactionResponse struct {
@@ -46,20 +46,20 @@ func (v *MoneyInput) GetAmount() string { return v.Amount }
 func (v *MoneyInput) GetCurrency() string { return v.Currency }
 
 type NewTransaction struct {
-	ISIN            string     `json:"ISIN"`
-	Broker          string     `json:"Broker"`
-	Date            time.Time  `json:"Date"`
-	Exchange        string     `json:"Exchange"`
-	Amount          int        `json:"Amount"`
-	Price           MoneyInput `json:"Price"`
-	TransactionCost MoneyInput `json:"TransactionCost"`
+	Isin            string     `json:"isin"`
+	Broker          string     `json:"broker"`
+	Date            time.Time  `json:"date"`
+	Exchange        string     `json:"exchange"`
+	Amount          int        `json:"amount"`
+	Price           MoneyInput `json:"price"`
+	TransactionCost MoneyInput `json:"transactionCost"`
 	// If the broker does not supply an ID for the transaction, an ID is generated based on
 	// the rest of the data.
-	BrokerID string `json:"BrokerID"`
+	BrokerId string `json:"brokerId"`
 }
 
-// GetISIN returns NewTransaction.ISIN, and is useful for accessing the field via an interface.
-func (v *NewTransaction) GetISIN() string { return v.ISIN }
+// GetIsin returns NewTransaction.Isin, and is useful for accessing the field via an interface.
+func (v *NewTransaction) GetIsin() string { return v.Isin }
 
 // GetBroker returns NewTransaction.Broker, and is useful for accessing the field via an interface.
 func (v *NewTransaction) GetBroker() string { return v.Broker }
@@ -79,8 +79,8 @@ func (v *NewTransaction) GetPrice() MoneyInput { return v.Price }
 // GetTransactionCost returns NewTransaction.TransactionCost, and is useful for accessing the field via an interface.
 func (v *NewTransaction) GetTransactionCost() MoneyInput { return v.TransactionCost }
 
-// GetBrokerID returns NewTransaction.BrokerID, and is useful for accessing the field via an interface.
-func (v *NewTransaction) GetBrokerID() string { return v.BrokerID }
+// GetBrokerId returns NewTransaction.BrokerId, and is useful for accessing the field via an interface.
+func (v *NewTransaction) GetBrokerId() string { return v.BrokerId }
 
 // __CreateTransactionInput is used internally by genqlient
 type __CreateTransactionInput struct {
@@ -94,7 +94,7 @@ func (v *__CreateTransactionInput) GetInput() NewTransaction { return v.Input }
 const CreateTransaction_Operation = `
 mutation CreateTransaction ($input: NewTransaction!) {
 	createTransaction(input: $input) {
-		ID
+		id
 	}
 }
 `

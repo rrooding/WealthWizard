@@ -35,7 +35,7 @@ func newTransaction(data map[string]string) (*api.NewTransaction, error) {
 	}
 
 	newTransaction := &api.NewTransaction{
-		ISIN:     data["ISIN"],
+		Isin:     data["ISIN"],
 		Broker:   "DeGiro",
 		Date:     date,
 		Exchange: data["Beurs"],
@@ -45,7 +45,7 @@ func newTransaction(data map[string]string) (*api.NewTransaction, error) {
 
 	// Fill in the broker ID if it exists
 	if data["Order ID"] != "" {
-		newTransaction.BrokerID = data["Order ID"]
+		newTransaction.BrokerId = data["Order ID"]
 	}
 
 	if data["Transactiekosten en/of"] != "" {

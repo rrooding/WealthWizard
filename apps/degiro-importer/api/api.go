@@ -40,7 +40,7 @@ func (a *API) CreateTransaction(input NewTransaction) (*CreateTransactionRespons
 	_ = `# @genqlient
     mutation CreateTransaction($input: NewTransaction!) {
       createTransaction(input: $input) {
-        ID
+        id
       }
     }
   `
