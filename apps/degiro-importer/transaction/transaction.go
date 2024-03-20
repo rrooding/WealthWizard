@@ -80,17 +80,3 @@ func HandleTransaction(writerChannel <-chan map[string]string, done chan<- bool,
 func Println(t *api.NewTransaction) {
 	fmt.Printf("Transaction: %v\n", t)
 }
-
-func CreatorFunc(client *api.API) func(*api.NewTransaction) {
-	return func(t *api.NewTransaction) {
-		Println(t)
-
-		res, err := client.CreateTransaction(*t)
-		if err != nil {
-			fmt.Printf("Error creating transaction: %v", err)
-			return
-		}
-
-		fmt.Printf("Transaction created: %v\n", res.GetCreateTransaction().ID)
-	}
-}
