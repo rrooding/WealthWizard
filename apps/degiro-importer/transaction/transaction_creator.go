@@ -1,13 +1,13 @@
 package transaction
 
 import (
-  "fmt"
+	"fmt"
 
-  "wealth-wizard/degiro-importer/api"
+	"wealth-wizard/degiro-importer/api"
 )
 
 type TransactionCreator interface {
-  CreateTransaction(api.NewTransaction) (*api.CreateTransactionResponse, error)
+	CreateTransaction(api.NewTransaction) (*api.CreateTransactionResponse, error)
 }
 
 func CreatorFunc(client TransactionCreator) func(*api.NewTransaction) {

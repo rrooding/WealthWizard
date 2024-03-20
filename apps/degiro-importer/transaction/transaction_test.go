@@ -14,7 +14,8 @@ import (
 )
 
 func Test_newTransaction(t *testing.T) {
-	date := time.Date(2003, 02, 01, 16, 01, 0, 0, time.Local)
+	cet, _ := time.LoadLocation("CET")
+	date := time.Date(2003, 02, 01, 16, 01, 0, 0, cet)
 
 	price := api.MoneyInput{Amount: "34.54", Currency: "EUR"}
 	transactionCost := api.MoneyInput{Amount: "12.34", Currency: "EUR"}
@@ -152,24 +153,25 @@ func Test_HandleTransaction(t *testing.T) {
 }
 
 func Test_Println(t *testing.T) {
-  mockTransaction := &api.NewTransaction{Isin: "123", Broker: "DeGiro", Date: time.Date(2003, 02, 01, 16, 01, 0, 0, time.Local)}
+	cet, _ := time.LoadLocation("CET")
+	mockTransaction := &api.NewTransaction{Isin: "123", Broker: "DeGiro", Date: time.Date(2003, 02, 01, 16, 01, 0, 0, cet)}
 
-  // Redirect stdout
-  realStdout := os.Stdout
-  defer func() { os.Stdout = realStdout }()
+	// Redirect stdout
+	realStdout := os.Stdout
+	defer func() { os.Stdout = realStdout }()
 
-  r, w, _ := os.Pipe()
-  os.Stdout = w
+	r, w, _ := os.Pipe()
+	os.Stdout = w
 
-  // Run test
-  Println(mockTransaction)
+	// Run test
+	Println(mockTransaction)
 
-  // Capture output
-  w.Close()
-  out, _ := ioutil.ReadAll(r)
+	// Capture output
+	w.Close()
+	out, _ := ioutil.ReadAll(r)
 
-  expectedOutput := "Transaction: &{123 DeGiro 2003-02-01 16:01:00 +0100 CET  0 { } { } }"
-  if !strings.Contains(string(out), expectedOutput) {
-    t.Errorf("Expected output %q not found in stdout: %s", expectedOutput, out)
-  }
+	expectedOutput := "Transaction: &{123 DeGiro 2003-02-01 16:01:00 +0100 CET  0 { } { } }"
+	if !strings.Contains(string(out), expectedOutput) {
+		t.Errorf("Expected output %q not found in stdout: %s", expectedOutput, out)
+	}
 }
