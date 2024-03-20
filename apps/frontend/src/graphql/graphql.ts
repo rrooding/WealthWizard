@@ -13,6 +13,24 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
+  /**
+   * A signed decimal number, which supports arbitrary precision and is serialized as a string.
+   *
+   * Example values: 29.99, 29.999.
+   */
+  Decimal: { input: any; output: any; }
+};
+
+export type Money = {
+  __typename?: 'Money';
+  amount: Scalars['Decimal']['output'];
+  currency: Scalars['String']['output'];
+};
+
+export type MoneyInput = {
+  amount: Scalars['Decimal']['input'];
+  currency: Scalars['String']['input'];
 };
 
 export type Mutation = {
@@ -26,13 +44,18 @@ export type MutationCreateTransactionArgs = {
 };
 
 export type NewTransaction = {
-  broker: Scalars['String']['input'];
+  Amount: Scalars['Int']['input'];
+  Broker: Scalars['String']['input'];
   /**
    * If the broker does not supply an ID for the transaction, an ID is generated based on
    * the rest of the data.
    */
-  brokerId?: InputMaybe<Scalars['String']['input']>;
-  isin: Scalars['String']['input'];
+  BrokerID?: InputMaybe<Scalars['String']['input']>;
+  Date: Scalars['DateTime']['input'];
+  Exchange: Scalars['String']['input'];
+  ISIN: Scalars['String']['input'];
+  Price: MoneyInput;
+  TransactionCost?: InputMaybe<MoneyInput>;
 };
 
 export type Query = {
@@ -49,7 +72,13 @@ export type Security = {
 
 export type Transaction = {
   __typename?: 'Transaction';
-  broker: Scalars['String']['output'];
-  brokerId: Scalars['String']['output'];
-  isin: Scalars['String']['output'];
+  Amount: Scalars['Int']['output'];
+  Broker: Scalars['String']['output'];
+  BrokerID: Scalars['String']['output'];
+  Date: Scalars['DateTime']['output'];
+  Exchange: Scalars['String']['output'];
+  ID: Scalars['ID']['output'];
+  ISIN: Scalars['String']['output'];
+  Price: Money;
+  TransactionCost?: Maybe<Money>;
 };

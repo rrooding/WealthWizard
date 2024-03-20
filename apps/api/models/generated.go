@@ -2,15 +2,34 @@
 
 package models
 
+import (
+	"time"
+)
+
+type Money struct {
+	Amount   string `json:"amount"`
+	Currency string `json:"currency"`
+}
+
+type MoneyInput struct {
+	Amount   string `json:"amount"`
+	Currency string `json:"currency"`
+}
+
 type Mutation struct {
 }
 
 type NewTransaction struct {
-	Isin   string `json:"isin"`
-	Broker string `json:"broker"`
+	Isin            string      `json:"ISIN"`
+	Broker          string      `json:"Broker"`
+	Date            time.Time   `json:"Date"`
+	Exchange        string      `json:"Exchange"`
+	Amount          int         `json:"Amount"`
+	Price           *MoneyInput `json:"Price"`
+	TransactionCost *MoneyInput `json:"TransactionCost,omitempty"`
 	// If the broker does not supply an ID for the transaction, an ID is generated based on
 	// the rest of the data.
-	BrokerID *string `json:"brokerId,omitempty"`
+	BrokerID *string `json:"BrokerID,omitempty"`
 }
 
 type Query struct {
