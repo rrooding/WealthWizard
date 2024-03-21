@@ -14,8 +14,8 @@ import (
 )
 
 func Test_newTransaction(t *testing.T) {
-	cet, _ := time.LoadLocation("CET")
-	date := time.Date(2003, 02, 01, 16, 01, 0, 0, cet)
+	loc, _ := time.LoadLocation("Europe/Amsterdam")
+	date := time.Date(2003, 02, 01, 16, 01, 0, 0, loc)
 
 	price := api.MoneyInput{Amount: "34.54", Currency: "EUR"}
 	transactionCost := api.MoneyInput{Amount: "12.34", Currency: "EUR"}
@@ -153,7 +153,7 @@ func Test_HandleTransaction(t *testing.T) {
 }
 
 func Test_Println(t *testing.T) {
-	cet, _ := time.LoadLocation("CET")
+	cet, _ := time.LoadLocation("Europe/Amsterdam")
 	mockTransaction := &api.NewTransaction{Isin: "123", Broker: "DeGiro", Date: time.Date(2003, 02, 01, 16, 01, 0, 0, cet)}
 
 	// Redirect stdout

@@ -22,8 +22,9 @@ func newTransaction(data map[string]string) (*api.NewTransaction, error) {
 	}
 
 	// Parse the date and time
+	loc, _ := time.LoadLocation("Europe/Amsterdam")
 	dateTime := fmt.Sprintf("%s %s CET", data["Datum"], data["Tijd"])
-	date, err := time.Parse("02-01-2006 15:04 MST", dateTime)
+	date, err := time.ParseInLocation("02-01-2006 15:04 MST", dateTime, loc)
 	if err != nil {
 		return nil, err
 	}
