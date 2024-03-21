@@ -23,7 +23,9 @@ func (m *MockClient) CreateTransaction(input api.NewTransaction) (*api.CreateTra
 }
 
 func Test_CreatorFunc(t *testing.T) {
-	cet, _ := time.LoadLocation("CET")
+	loc, _ := time.LoadLocation("Europe/Amsterdam")
+	date := time.Date(2003, 02, 01, 16, 01, 0, 0, loc)
+
 	mockClient := &MockClient{}
 
 	// Redirect stdout
@@ -40,7 +42,7 @@ func Test_CreatorFunc(t *testing.T) {
 	}
 
 	// Check if the function is working
-	mockTransaction := &api.NewTransaction{Isin: "123", Broker: "DeGiro", BrokerId: "456", Amount: 1, Date: time.Date(2003, 02, 01, 16, 01, 0, 0, cet)}
+	mockTransaction := &api.NewTransaction{Isin: "123", Broker: "DeGiro", BrokerId: "456", Amount: 1, Date: date}
 	creatorFunc(mockTransaction)
 
 	// It calls the mock client
