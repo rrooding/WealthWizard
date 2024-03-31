@@ -1,5 +1,4 @@
 /* eslint-disable */
-import type { Decimal } from '@wealth-wizard/web/graphql';
 import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -21,7 +20,7 @@ export type Scalars = {
    *
    * Example values: 29.99, 29.999.
    */
-  Decimal: { input: Decimal; output: Decimal; }
+  Decimal: { input: number; output: number; }
 };
 
 export type Money = {
@@ -105,7 +104,7 @@ export type SecurityItem_SecurityFragmentFragment = { __typename?: 'Security', i
     & { ' $fragmentRefs'?: { 'MoneyItem_MoneyFragmentFragment': MoneyItem_MoneyFragmentFragment } }
   ) } & { ' $fragmentName'?: 'SecurityItem_SecurityFragmentFragment' };
 
-export type MoneyItem_MoneyFragmentFragment = { __typename?: 'Money', amount: Decimal, currency: string } & { ' $fragmentName'?: 'MoneyItem_MoneyFragmentFragment' };
+export type MoneyItem_MoneyFragmentFragment = { __typename?: 'Money', amount: number, currency: string } & { ' $fragmentName'?: 'MoneyItem_MoneyFragmentFragment' };
 
 export const MoneyItem_MoneyFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MoneyItem_MoneyFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Money"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}}]} as unknown as DocumentNode<MoneyItem_MoneyFragmentFragment, unknown>;
 export const SecurityItem_SecurityFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SecurityItem_SecurityFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Security"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"isin"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"averagePrice"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MoneyItem_MoneyFragment"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MoneyItem_MoneyFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Money"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}}]} as unknown as DocumentNode<SecurityItem_SecurityFragmentFragment, unknown>;
