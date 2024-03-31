@@ -7,5 +7,5 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../../coverage/libs/web/ui-components',
-  setupFilesAfterEnv: ['<rootDir>/spec/setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
 };
