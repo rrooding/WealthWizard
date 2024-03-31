@@ -1,14 +1,15 @@
-import { StocksTableCard, PortfolioValueCard } from "@wealth-wizard/web/stocks";
+import { PortfolioValueCard } from "@wealth-wizard/web/stocks";
+import { CurrentlyHeldSecuritiesContainer } from "./CurrentlyHeldSecuritiesContainer";
 
-export default function StockPage() {
+export default async function StockPage() {
   return (
     <div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <PortfolioValueCard />
       </div>
       <div>
-        <StocksTableCard />
-        </div>
+        <CurrentlyHeldSecuritiesContainer />
+      </div>
     </div>
   );
 }

@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@wealth-wizard/web/graphql": ["libs/web/graphql/src/index.ts"],
       "@wealth-wizard/web/stocks": ["libs/web/stocks/src/index.ts"],
       "@wealth-wizard/web/stocks/server": ["libs/web/stocks/src/server.ts"],
       "@wealth-wizard/web/ui-components": [
