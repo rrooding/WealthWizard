@@ -12,7 +12,7 @@ export function Money(props: { money: FragmentType<typeof MoneyItem_MoneyFragmen
   const { currency, ...money } = getFragmentData(MoneyItem_MoneyFragment, props.money)
   const amount = new Decimal(money.amount).toNumber();
 
-  let text = amount.toLocaleString("nl-US", { style: "currency", currency });
+  const text = amount.toLocaleString("nl-US", { style: "currency", currency });
 
   return (
     <span>{text}</span>
