@@ -11,7 +11,7 @@ const SecurityItems_QueryFragment = gql(/* GraphQL */`
   }
 `);
 
-export function StocksTableCard(props: { securities: FragmentType<typeof SecurityItems_QueryFragment>}) {
+export function StocksTableCard(props: { readonly securities: FragmentType<typeof SecurityItems_QueryFragment>}) {
   const query = getFragmentData(SecurityItems_QueryFragment, props.securities)
 
   return (
