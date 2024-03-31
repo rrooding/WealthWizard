@@ -11,7 +11,7 @@ const SecurityItem_SecurityFragment = gql(/* GraphQL */`
   }
 `);
 
-export function StocksTableRow(props: { security: FragmentType<typeof SecurityItem_SecurityFragment> }) {
+export function StocksTableRow(props: { readonly security: FragmentType<typeof SecurityItem_SecurityFragment> }) {
   const security = getFragmentData(SecurityItem_SecurityFragment, props.security)
 
   return (

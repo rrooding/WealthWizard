@@ -8,7 +8,7 @@ export const MoneyItem_MoneyFragment = gql(/* GraphQL */`
   }
 `);
 
-export function Money(props: { money: FragmentType<typeof MoneyItem_MoneyFragment> }) {
+export function Money(props: { readonly money: FragmentType<typeof MoneyItem_MoneyFragment> }) {
   const { currency, ...money } = getFragmentData(MoneyItem_MoneyFragment, props.money)
   const amount = new Decimal(money.amount).toNumber();
 
