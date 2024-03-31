@@ -3,13 +3,6 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/frontend",
   "projectType": "application",
-  "targets": {
-    "codegen": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "yarn graphql-codegen --config apps/frontend/codegen.config.ts"
-      }
-    }
-  },
-  "tags": []
+  "targets": {},
+  "tags": ["web"]
 }

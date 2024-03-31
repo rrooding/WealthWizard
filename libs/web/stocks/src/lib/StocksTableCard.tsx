@@ -1,6 +1,19 @@
-import { Card, Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from "@wealth-wizard/web/ui-components";
+import { gql, getFragmentData, type FragmentType } from "@wealth-wizard/web/graphql";
+import { Card, Table, TableHeader, TableHead, TableBody, TableRow } from "@wealth-wizard/web/ui-components";
+import { StocksTableRow } from "./StocksTableRow";
 
-export function StocksTableCard() {
+const SecurityItems_QueryFragment = gql(/* GraphQL */`
+  fragment SecurityItems_QueryFragment on Query {
+    securities {
+      isin
+      ...SecurityItem_SecurityFragment
+    }
+  }
+`);
+
+export function StocksTableCard(props: { securities: FragmentType<typeof SecurityItems_QueryFragment>}) {
+  const query = getFragmentData(SecurityItems_QueryFragment, props.securities)
+
   return (
     <Card>
       <Table>
@@ -8,27 +21,13 @@ export function StocksTableCard() {
           <TableRow>
             <TableHead className="w-[100px]">Stock Symbol</TableHead>
             <TableHead>Quantity</TableHead>
-            <TableHead>Price</TableHead>
+            <TableHead>Average Price</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
-            <TableCell className="font-medium">AAPL</TableCell>
-            <TableCell>10</TableCell>
-            <TableCell>$150.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">GOOG</TableCell>
-            <TableCell>5</TableCell>
-            <TableCell>$2000.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">MSFT</TableCell>
-            <TableCell>15</TableCell>
-            <TableCell>$250.00</TableCell>
-          </TableRow>
+          {query.securities.map(security => <StocksTableRow security={security} key={security.isin} />)}
         </TableBody>
       </Table>
     </Card>
-  )
+  );
 }

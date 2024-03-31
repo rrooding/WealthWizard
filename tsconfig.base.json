@@ -19,7 +19,8 @@
       "@wealth-wizard/web/stocks/server": ["libs/web/stocks/src/server.ts"],
       "@wealth-wizard/web/ui-components": [
         "libs/web/ui-components/src/index.ts"
-      ]
+      ],
+      "@wealth-wizard/web/graphql": ["libs/web/graphql/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
